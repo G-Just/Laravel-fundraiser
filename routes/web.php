@@ -16,12 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Home
-Route::get('/home', function () {
-    return view('home');
-})->name('home');
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [CauseController::class, 'index'])->name('home');
 
 // Profile
 Route::middleware('auth')->group(function () {
@@ -31,10 +26,10 @@ Route::middleware('auth')->group(function () {
 });
 
 // Causes
-Route::middleware('auth')->prefix('causes')->group(function () {
-    Route::get('/', [CauseController::class, 'index'])->name('causes.list');
-    Route::get('/show/{cause}', [CauseController::class, 'show'])->name('causes.show');
-    Route::get('/create', [CauseController::class, 'create'])->name('causes.create');
+Route::middleware('auth')->prefix('cause')->group(function () {
+    Route::get('/create', [CauseController::class, 'create'])->name('cause.create');
+    Route::post('/store', [CauseController::class, 'store'])->name('cause.store');
+    Route::get('/{cause}', [CauseController::class, 'show'])->name('cause.show');
 });
 
 require __DIR__ . '/auth.php';

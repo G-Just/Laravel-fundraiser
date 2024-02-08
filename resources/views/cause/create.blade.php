@@ -1,6 +1,6 @@
 <x-app-layout>
-    <div class="p-4 bg-gray-800 mx-52 sm:rounded-lg">
-        <form method="POST" action="{{ route('causes.create') }}">
+    <div class="w-full px-6 py-4 overflow-hidden bg-white shadow-md sm:max-w-2xl dark:bg-gray-800 sm:rounded-lg">
+        <form enctype="multipart/form-data" method="POST" action="{{ route('cause.store') }}">
             @csrf
 
             <!-- Title -->

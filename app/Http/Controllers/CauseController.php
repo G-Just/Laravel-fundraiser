@@ -13,7 +13,8 @@ class CauseController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $causes = Cause::all();
+        return view('home', compact(['causes']));
     }
 
     /**
@@ -29,7 +30,21 @@ class CauseController extends Controller
      */
     public function store(StoreCauseRequest $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:30',
+            'description' => 'nullable|string|max:100',
+            'goal' => 'numeric',
+            'thumbnail' => 'image'
+        ]);
+
+        if (request()->has('thumbnail')) {
+            $imagePath = request('thumbnail')->store('cause', 'public');
+            $validated['thumbnail'] = $imagePath;
+        }
+
+        Cause::create($validated);
+
+        return redirect()->route('home')->with('message', 'Cause created successfully');
     }
 
     /**
