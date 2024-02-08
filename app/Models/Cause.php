@@ -20,6 +20,7 @@ class Cause extends Model
         'title',
         'description',
         'thumbnail',
+        'hashtags',
         'goal',
     ];
 
@@ -30,5 +31,13 @@ class Cause extends Model
         } else {
             return null;
         }
+    }
+    public function getHashTags()
+    {
+        $hashtags = explode(',', $this->hashtags);
+        foreach ($hashtags as $key => $hashtag) {
+            $hashtags[$key] = '#' . $hashtag;
+        }
+        return $hashtags;
     }
 }

@@ -36,6 +36,7 @@ class CauseController extends Controller
             'goal' => 'numeric',
             'thumbnail' => 'image'
         ]);
+        $validated['hashtags'] = implode(',', request()->hashtags);
 
         if (request()->has('thumbnail')) {
             $imagePath = request('thumbnail')->store('cause', 'public');
