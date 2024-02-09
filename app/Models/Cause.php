@@ -9,13 +9,6 @@ class Cause extends Model
 {
     use HasFactory;
 
-    // $table->id();
-    // $table->string('title');
-    // $table->string('description')->nullable();
-    // $table->string('thumbnail')->nullable();
-    // $table->decimal('goal', $total = 15, $places = 2);
-    // $table->timestamps();
-
     protected $fillable = [
         'title',
         'description',
@@ -24,7 +17,15 @@ class Cause extends Model
         'goal',
     ];
 
-    public function displayThumbnail()
+    protected $attributes = [
+        'approved' => false
+    ];
+
+
+    /**
+     * Returns a link that points to the thumbnail.
+     */
+    public function getThumbNail()
     {
         if ($this->thumbnail) {
             return url('storage/' . $this->thumbnail);
@@ -32,6 +33,10 @@ class Cause extends Model
             return null;
         }
     }
+
+    /**
+     * Returns a list with applied hashtags.
+     */
     public function getHashTags()
     {
         $hashtags = explode(',', $this->hashtags);

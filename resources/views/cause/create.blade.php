@@ -13,7 +13,7 @@
 
             <!-- Description -->
             <div class="mt-4">
-                <x-input-label for="description" :value="__('Description')" />
+                <x-input-label for="description" :value="__('Description (max 500 characters)')" />
                 <x-textarea-input rows="5" id="description" class="block w-full mt-1" type="text"
                     name="description" :value="old('description')" autofocus autocomplete="description" />
                 <x-input-error :messages="$errors->get('description')" class="mt-2" />
