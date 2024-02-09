@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('thumbnail')->nullable();
             $table->string('hashtags')->nullable();
             $table->decimal('goal', $total = 15, $places = 2);
+            $table->unsignedBigInteger('owner')->nullable();
+            $table->foreign('owner')->references('id')->on('users')->nullOnDelete();
             $table->boolean('approved');
             $table->timestamps();
         });

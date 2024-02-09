@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cause extends Model
 {
@@ -14,6 +16,7 @@ class Cause extends Model
         'description',
         'thumbnail',
         'hashtags',
+        'owner',
         'goal',
     ];
 
@@ -21,6 +24,15 @@ class Cause extends Model
         'approved' => false
     ];
 
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner');
+    }
+
+    public function donations(): HasMany
+    {
+        return $this->hasMany(Donation::class);
+    }
 
     /**
      * Returns a link that points to the thumbnail.
@@ -30,7 +42,7 @@ class Cause extends Model
         if ($this->thumbnail) {
             return url('storage/' . $this->thumbnail);
         } else {
-            return null;
+            return "https://www.pixel4k.com/wp-content/uploads/2024/01/sunset-lands-art-4k_1706235364.jpg.webp";
         }
     }
 

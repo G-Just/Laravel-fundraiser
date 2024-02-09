@@ -13,7 +13,7 @@
 
             <!-- Description -->
             <div class="mt-4">
-                <x-input-label for="description" :value="__('Description (max 500 characters)')" />
+                <x-input-label for="description" :value="__('Description (max 1000 characters)')" />
                 <x-textarea-input rows="5" id="description" class="block w-full mt-1" type="text"
                     name="description" :value="old('description')" autofocus autocomplete="description" />
                 <x-input-error :messages="$errors->get('description')" class="mt-2" />
@@ -38,25 +38,18 @@
 
                     input.addEventListener('keyup', () => {
                         if (event.code == 'Space' && input.value.length > 0) {
-                            let text = document.createTextNode('#' + input.value + `X`);
+                            let text = document.createTextNode('#' + input.value.split(' ').join('') + ` X`);
                             let p = document.createElement('p');
                             let hiddenInput = document.createElement('input');
                             container.appendChild(p);
                             container.appendChild(hiddenInput);
                             hiddenInput.setAttribute('type', 'hidden')
-                            hiddenInput.setAttribute('value', input.value)
+                            hiddenInput.setAttribute('value', input.value.split(' ').join(''))
                             hiddenInput.setAttribute('name', `hashtags[${iter}]`)
                             hiddenInput.classList.add('hidden-tag-input')
                             iter++;
                             p.appendChild(text);
-                            p.classList.add('tag');
-                            p.classList.add('text-sm');
-                            p.classList.add('bg-gray-900');
-                            p.classList.add('bg-gray-900');
-                            p.classList.add('px-2');
-                            p.classList.add('py-0.5');
-                            p.classList.add('rounded-xl');
-                            p.classList.add('cursor-pointer');
+                            p.classList.add('cursor-pointer', 'rounded-xl', 'tag', 'text-sm', 'bg-gray-900', 'px-2', 'py-0.5');
                             input.value = '';
                             let deleteTags = document.querySelectorAll('.tag');
                             let hiddenInputs = document.querySelectorAll('.hidden-tag-input');
@@ -74,9 +67,21 @@
                 <div class="mt-4">
                     <x-input-label for="goal" :value="__('Goal')" />
                     <x-text-input id="goal" class="block w-full mt-1" type="number" name="goal"
-                        :value="old('goal')" autofocus autocomplete="goal" />
+                        :value="old('goal')" autofocus autocomplete="goal" oninput="displayGoal(event)" />
                     <x-input-error :messages="$errors->get('goal')" class="mt-2" />
                 </div>
+                <div class="my-2">
+                    <p id="goal-show"></p>
+                </div>
+                <script>
+                    const goalContainer = document.getElementById('goal-show')
+                    const goalInput = document.querySelector('#goal');
+
+                    function displayGoal(event) {
+                        goalContainer.innerHTML = 'Goal: $' + (+event.target.value).toFixed(2) + ' USD';
+                    }
+                </script>
+
 
                 <!-- Thumbnail -->
                 <div class="mt-4">

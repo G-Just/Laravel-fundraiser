@@ -1,6 +1,6 @@
 @props([
     'id' => 0,
-    'thumbnail' => 'https://www.pixel4k.com/wp-content/uploads/2024/01/sunset-lands-art-4k_1706235364.jpg.webp',
+    'thumbnail' => '',
     'title' => 'Title',
     'hashtags' => [],
     'description' =>

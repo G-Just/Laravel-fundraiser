@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cause;
 use App\Http\Requests\StoreCauseRequest;
 use App\Http\Requests\UpdateCauseRequest;
+use Illuminate\Support\Facades\Auth;
 
 class CauseController extends Controller
 {
@@ -32,11 +33,16 @@ class CauseController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:30',
-            'description' => 'nullable|string|max:500',
+            'description' => 'nullable|string|max:1000',
             'goal' => 'numeric',
             'thumbnail' => 'image'
         ]);
-        $validated['hashtags'] = implode(',', request()->hashtags);
+        if (is_array(request()->hashtags)) {
+            $validated['hashtags'] = implode(',', request()->hashtags);
+        } else {
+            $validated['hashtags'] = request()->hashtags;
+        }
+        $validated['owner'] = Auth::user()->id;
 
         if (request()->has('thumbnail')) {
             $imagePath = request('thumbnail')->store('cause', 'public');
