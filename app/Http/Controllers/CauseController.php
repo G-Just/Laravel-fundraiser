@@ -32,7 +32,7 @@ class CauseController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:30',
-            'description' => 'nullable|string|max:100',
+            'description' => 'nullable|string|max:500',
             'goal' => 'numeric',
             'thumbnail' => 'image'
         ]);
@@ -53,7 +53,7 @@ class CauseController extends Controller
      */
     public function show(Cause $cause)
     {
-        //
+        return view('cause.show', compact(['cause']));
     }
 
     /**

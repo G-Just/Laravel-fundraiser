@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('causes', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description')->nullable();
+            $table->longText('description')->nullable();
             $table->string('thumbnail')->nullable();
             $table->string('hashtags')->nullable();
             $table->decimal('goal', $total = 15, $places = 2);
+            $table->boolean('approved');
             $table->timestamps();
         });
     }
