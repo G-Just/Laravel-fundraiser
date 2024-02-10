@@ -5,23 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Donation extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'amount'
+        'donation',
+        'cause_id',
+        'user_id'
     ];
 
     public function cause(): BelongsTo
     {
-        return $this->belongsTo(Cause::class, 'cause');
+        return $this->belongsTo(Cause::class);
     }
 
     public function donator(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'donator');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

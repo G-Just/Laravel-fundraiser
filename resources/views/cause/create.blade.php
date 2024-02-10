@@ -66,7 +66,7 @@
                 <!-- Goal -->
                 <div class="mt-4">
                     <x-input-label for="goal" :value="__('Goal')" />
-                    <x-text-input id="goal" class="block w-full mt-1" type="number" name="goal"
+                    <x-text-input step="0.1" id="goal" class="block w-full mt-1" type="number" name="goal"
                         :value="old('goal')" autofocus autocomplete="goal" oninput="displayGoal(event)" />
                     <x-input-error :messages="$errors->get('goal')" class="mt-2" />
                 </div>
@@ -78,7 +78,9 @@
                     const goalInput = document.querySelector('#goal');
 
                     function displayGoal(event) {
-                        goalContainer.innerHTML = 'Goal: $' + (+event.target.value).toFixed(2) + ' USD';
+                        goalContainer.innerHTML = 'Goal: $' + (+event.target.value).toLocaleString('en-US', {
+                            minimumFractionDigits: 2
+                        }) + ' USD';
                     }
                 </script>
 

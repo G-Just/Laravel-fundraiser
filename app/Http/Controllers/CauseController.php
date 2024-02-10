@@ -6,6 +6,8 @@ use App\Models\Cause;
 use App\Models\Hashtag;
 use App\Http\Requests\StoreCauseRequest;
 use App\Http\Requests\UpdateCauseRequest;
+use App\Models\Donation;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CauseController extends Controller
@@ -15,7 +17,7 @@ class CauseController extends Controller
      */
     public function index()
     {
-        $causes = Cause::paginate(5);
+        $causes = Cause::withSum('donations as collected', 'donation')->paginate(5);
         return view('home', compact(['causes']));
     }
 
@@ -34,7 +36,7 @@ class CauseController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:30',
-            'description' => 'nullable|string|max:1000',
+            'description' => 'nullable|string',
             'goal' => 'numeric',
             'thumbnail' => 'image'
         ]);
@@ -50,8 +52,10 @@ class CauseController extends Controller
 
         if (isset($request->hashtags)) {
             foreach ($request->hashtags as $hashtag) {
-                $hashtag = Hashtag::updateOrCreate(['hashtag' => $hashtag]);
-                $cause->hashtags()->syncWithoutDetaching($hashtag);
+                if (strlen($hashtag) > 0) {
+                    $hashtag = Hashtag::updateOrCreate(['hashtag' => $hashtag]);
+                    $cause->hashtags()->syncWithoutDetaching($hashtag);
+                }
             }
         }
 
@@ -61,8 +65,9 @@ class CauseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Cause $cause)
+    public function show($id)
     {
+        $cause = Cause::where('id', '=', $id)->withSum('donations as collected', 'donation')->first();
         return view('cause.show', compact(['cause']));
     }
 
@@ -88,5 +93,19 @@ class CauseController extends Controller
     public function destroy(Cause $cause)
     {
         //
+    }
+
+    /**
+     * Store a newly donation resource in storage.
+     */
+    public function donate(Request $request, Cause $cause)
+    {
+        $validated = $request->validate([
+            'donation' => 'numeric'
+        ]);
+        $validated['cause_id'] = $cause->id;
+        $validated['user_id'] = Auth::user()->id;
+        Donation::create($validated);
+        return redirect()->route('cause.show', $cause)->with('message', 'Donation successful');
     }
 }

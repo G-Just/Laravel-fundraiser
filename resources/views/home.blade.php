@@ -4,7 +4,7 @@
             <div class="flex flex-col gap-8 text-gray-900 dark:text-gray-100">
                 @forelse ($causes as $cause)
                     <x-listing :id="$cause->id" :thumbnail="$cause->getThumbnail()" :title="$cause->title" :hashtags="$cause->getHashTags()" :description="$cause->description"
-                        :goal="$cause->goal" />
+                        :goal="$cause->goal" :collected="$cause->collected" />
                 @empty
                     <p>No data found</p>
                 @endforelse

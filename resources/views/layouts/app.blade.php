@@ -24,7 +24,7 @@
         <main class="flex flex-col min-h-screen">
             <div class="py-12">
                 <div class="px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div class="overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="shadow-sm sm:rounded-lg">
                         <div class="flex flex-col items-center gap-8 text-gray-900 dark:text-gray-100">
                             {{ $slot }}
                         </div>

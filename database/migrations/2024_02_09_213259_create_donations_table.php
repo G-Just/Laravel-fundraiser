@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('donations', function (Blueprint $table) {
             $table->id();
+            $table->decimal('donation', $total = 15, $places = 2);
+            $table->unsignedBigInteger('cause_id');
+            $table->foreign('cause_id')->references('id')->on('causes')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
             $table->timestamps();
-            $table->decimal('amount', $total = 15, $places = 2);
-            $table->unsignedBigInteger('cause');
-            $table->foreign('cause')->references('id')->on('causes')->onDelete('cascade');
-            $table->unsignedBigInteger('donator')->nullable();
-            $table->foreign('donator')->references('id')->on('users')->nullOnDelete();
         });
     }
 
