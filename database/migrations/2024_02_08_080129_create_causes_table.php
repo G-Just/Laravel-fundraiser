@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('title');
             $table->longText('description')->nullable();
             $table->string('thumbnail')->nullable();
-            $table->string('hashtags')->nullable();
             $table->decimal('goal', $total = 15, $places = 2);
             $table->unsignedBigInteger('owner')->nullable();
             $table->foreign('owner')->references('id')->on('users')->nullOnDelete();

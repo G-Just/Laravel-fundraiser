@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cause extends Model
@@ -34,6 +35,11 @@ class Cause extends Model
         return $this->hasMany(Donation::class);
     }
 
+    public function hashtags(): BelongsToMany
+    {
+        return $this->belongsToMany(Hashtag::class);
+    }
+
     /**
      * Returns a link that points to the thumbnail.
      */
@@ -49,12 +55,13 @@ class Cause extends Model
     /**
      * Returns a list with applied hashtags.
      */
-    public function getHashTags()
+    public function getHashTags(): array
     {
-        $hashtags = explode(',', $this->hashtags);
-        foreach ($hashtags as $key => $hashtag) {
-            $hashtags[$key] = '#' . $hashtag;
-        }
+        $modelHashtags = $this->hashtags()->get(['hashtag'])->toArray();
+        $hashtags = [];
+        foreach ($modelHashtags as $key => $value) {
+            $hashtags[] = '#' . $modelHashtags[$key]['hashtag'];
+        };
         return $hashtags;
     }
 }

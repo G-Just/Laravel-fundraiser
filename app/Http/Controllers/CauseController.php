@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cause;
+use App\Models\Hashtag;
 use App\Http\Requests\StoreCauseRequest;
 use App\Http\Requests\UpdateCauseRequest;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,7 @@ class CauseController extends Controller
      */
     public function index()
     {
-        $causes = Cause::all();
+        $causes = Cause::paginate(5);
         return view('home', compact(['causes']));
     }
 
@@ -37,19 +38,22 @@ class CauseController extends Controller
             'goal' => 'numeric',
             'thumbnail' => 'image'
         ]);
-        if (is_array(request()->hashtags)) {
-            $validated['hashtags'] = implode(',', request()->hashtags);
-        } else {
-            $validated['hashtags'] = request()->hashtags;
-        }
+
         $validated['owner'] = Auth::user()->id;
 
-        if (request()->has('thumbnail')) {
+        if ($request->has('thumbnail')) {
             $imagePath = request('thumbnail')->store('cause', 'public');
             $validated['thumbnail'] = $imagePath;
         }
 
-        Cause::create($validated);
+        $cause = Cause::create($validated);
+
+        if (isset($request->hashtags)) {
+            foreach ($request->hashtags as $hashtag) {
+                $hashtag = Hashtag::updateOrCreate(['hashtag' => $hashtag]);
+                $cause->hashtags()->syncWithoutDetaching($hashtag);
+            }
+        }
 
         return redirect()->route('home')->with('message', 'Cause created successfully');
     }

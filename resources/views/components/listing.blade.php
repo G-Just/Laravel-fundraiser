@@ -1,11 +1,10 @@
 @props([
     'id' => 0,
     'thumbnail' => '',
-    'title' => 'Title',
+    'title' => 'Failed to load, contact admin',
     'hashtags' => [],
-    'description' =>
-        'Description goes here Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam veniam dicta cumque reprehenderit hic modi possimus eaque earum architecto laboriosam odit quam voluptate repellendus suscipit nesciunt fuga sapiente eveniet commodi quia, atque repudiandae quis qui. Pariatur esse id voluptatem, sit eum nihil quis. Id, odio? Reiciendis consequuntur laborum voluptatum soluta?',
-    'goal' => '50.00',
+    'description' => '',
+    'goal' => 'Failed to load, contact admin',
     'collected' => '25.00',
 ])
 <div class="relative">

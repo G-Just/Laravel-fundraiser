@@ -10,5 +10,6 @@
                 @endforelse
             </div>
         </div>
+        <div class="flex justify-center pb-4 mt-8">{{ $causes->links() }}</div>
     </div>
 </x-app-layout>
