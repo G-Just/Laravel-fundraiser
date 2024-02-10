@@ -93,6 +93,20 @@
                     <x-input-error :messages="$errors->get('thumbnail')" class="mt-2" />
                 </div>
 
+                <!-- Gallery -->
+                <x-input-label class="mt-4 mb-2" for="gallery" :value="__('Images')" />
+                <div id='gallery' class="relative border border-gray-500 border-dashed">
+                    <input type="file" multiple name='gallery'
+                        class="relative z-50 block w-full h-full p-20 opacity-0 cursor-pointer">
+                    <div class="absolute top-0 left-0 right-0 p-10 m-auto text-center">
+                        <h4>
+                            Drop files anywhere to upload
+                            <br />or
+                        </h4>
+                        <p class="">Select Files</p>
+                    </div>
+                </div>
+
                 <div class="flex items-center justify-end mt-4">
                     <x-primary-button class="ms-3">
                         {{ __('Create') }}

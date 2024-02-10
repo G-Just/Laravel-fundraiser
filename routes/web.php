@@ -25,7 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
 // Causes
 Route::middleware('auth')->prefix('cause')->group(function () {
     Route::get('/create', [CauseController::class, 'create'])->name('cause.create');
@@ -33,6 +32,6 @@ Route::middleware('auth')->prefix('cause')->group(function () {
     Route::post('/{cause}/donate', [CauseController::class, 'donate'])->name('cause.donate');
 });
 
-Route::get('/{cause}/show', [CauseController::class, 'show'])->name('cause.show');
+Route::get('cause/{cause}/', [CauseController::class, 'show'])->name('cause.show');
 
 require __DIR__ . '/auth.php';

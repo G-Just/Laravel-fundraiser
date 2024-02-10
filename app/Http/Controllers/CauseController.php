@@ -10,6 +10,8 @@ use App\Models\Donation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use function PHPUnit\Framework\isNull;
+
 class CauseController extends Controller
 {
     /**
@@ -68,6 +70,9 @@ class CauseController extends Controller
     public function show($id)
     {
         $cause = Cause::where('id', '=', $id)->withSum('donations as collected', 'donation')->first();
+        if (isNull($cause)) {
+            abort(404);
+        }
         return view('cause.show', compact(['cause']));
     }
 
@@ -100,6 +105,10 @@ class CauseController extends Controller
      */
     public function donate(Request $request, Cause $cause)
     {
+        $cause = Cause::where('id', '=', $cause->id)->withSum('donations as collected', 'donation')->first();
+        if ($cause->goal - $cause->collected <= $request['donation']) {
+            return redirect()->route('cause.show', $cause)->with('message', 'Donation successful');
+        }
         $validated = $request->validate([
             'donation' => 'numeric'
         ]);
