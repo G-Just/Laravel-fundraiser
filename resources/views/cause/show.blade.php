@@ -4,7 +4,14 @@
             <h1 class="text-5xl text-left">{{ $cause->title }}</h1>
             <x-donation-list class="-top-4 -right-[300px]" :donations="$cause->donations()->get()" />
         </div>
-        <img class="object-cover rounded-xl max-h-[500px]" src="{{ $cause->getThumbnail() }}" alt="Thumbnail">
+        <div class="flex flex-col gap-4">
+            <img class="object-cover col-span-4 rounded-xl" src="{{ $cause->getThumbnail() }}" alt="Thumbnail">
+            <div class="flex gap-4">
+                @foreach ($cause->getImages() as $key => $image)
+                    <x-image-dialog :img="$image" :iter="$key" />
+                @endforeach
+            </div>
+        </div>
         <div class="flex w-full">
             <p class="w-1/2">Created by: {{ $cause->owner()->first()->name ?? 'Not found' }}</p>
             <div class="flex flex-wrap items-center justify-end w-1/2 gap-2">
@@ -47,4 +54,5 @@
             </script>
         </div>
     </div>
+
 </x-app-layout>

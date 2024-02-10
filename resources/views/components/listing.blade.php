@@ -9,7 +9,7 @@
 ])
 
 <a href="{{ route('cause.show', $id) }}"
-    class="flex flex-col bg-white rounded-lg lg:max-h-64 lg:flex-row dark:bg-gray-800">
+    class="flex flex-col bg-white rounded-lg lg:max-h-64 lg:flex-row dark:bg-gray-800 w-[900px]">
     <img class="object-cover w-screen rounded-t-lg max-h-64 lg:max-h-full lg:rounded-t-none lg:rounded-l-lg lg:w-1/3"
         src="{{ $thumbnail }}" alt="Thumbnail">
     <div class="flex flex-col w-full px-2 pt-4 pb-6 lg:p-4">

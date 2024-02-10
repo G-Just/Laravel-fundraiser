@@ -7,6 +7,7 @@ use App\Models\Hashtag;
 use App\Http\Requests\StoreCauseRequest;
 use App\Http\Requests\UpdateCauseRequest;
 use App\Models\Donation;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,7 +41,8 @@ class CauseController extends Controller
             'title' => 'required|string|max:30',
             'description' => 'nullable|string',
             'goal' => 'numeric',
-            'thumbnail' => 'image'
+            'thumbnail' => 'image',
+            'image' => 'image',
         ]);
 
         $validated['owner'] = Auth::user()->id;
@@ -60,6 +62,12 @@ class CauseController extends Controller
                 }
             }
         }
+        if (isset($request->images)) {
+            foreach ($request->images as $image) {
+                $imagePath = $image->store('cause', 'public');
+                Image::updateOrCreate(['image' => $imagePath, 'cause_id' => $cause->id]);
+            }
+        }
 
         return redirect()->route('home')->with('message', 'Cause created successfully');
     }
@@ -70,9 +78,6 @@ class CauseController extends Controller
     public function show($id)
     {
         $cause = Cause::where('id', '=', $id)->withSum('donations as collected', 'donation')->first();
-        if (isNull($cause)) {
-            abort(404);
-        }
         return view('cause.show', compact(['cause']));
     }
 

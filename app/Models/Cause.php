@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection as SupportCollection;
 
 class Cause extends Model
 {
@@ -40,6 +41,11 @@ class Cause extends Model
         return $this->belongsToMany(Hashtag::class);
     }
 
+    public function images(): HasMany
+    {
+        return $this->hasMany(Image::class);
+    }
+
     /**
      * Returns a link that points to the thumbnail.
      */
@@ -63,5 +69,15 @@ class Cause extends Model
             $hashtags[] = '#' . $modelHashtags[$key]['hashtag'];
         };
         return $hashtags;
+    }
+
+    /**
+     * Returns a collection with attached images.
+     */
+    public function getImages(): SupportCollection
+    {
+        return $this->images()->get()->map(function (object $item) {
+            return $item->image = url('storage/' . $item->image);
+        });
     }
 }
