@@ -18,6 +18,11 @@ use Illuminate\Support\Facades\Route;
 // Home
 Route::get('/', [CauseController::class, 'index'])->name('home');
 
+// Queue
+Route::middleware('is_admin')->group(function () {
+    Route::get('/queue', [CauseController::class, 'queue'])->name('queue');
+});
+
 // Profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -30,6 +35,7 @@ Route::middleware('auth')->prefix('cause')->group(function () {
     Route::get('/create', [CauseController::class, 'create'])->name('cause.create');
     Route::post('/store', [CauseController::class, 'store'])->name('cause.store');
     Route::post('/{cause}/donate', [CauseController::class, 'donate'])->name('cause.donate');
+    Route::get('/{cause}/edit', [CauseController::class, 'edit'])->name('cause.edit');
 });
 
 Route::get('cause/{cause}/', [CauseController::class, 'show'])->name('cause.show');

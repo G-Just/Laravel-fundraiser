@@ -18,12 +18,25 @@ class CauseController extends Controller
      */
     public function index()
     {
-        $causes = Cause::withSum('donations as collected', 'donation')->paginate(5);
+        $causes = Cause::withSum('donations as collected', 'donation')->where('approved', '=', 1)->paginate(5);
+        if ($causes->count() == 0 and Auth::user()) {
+            $causes = Cause::withSum('donations as collected', 'donation')->where('user_id', '=', Auth::user()->id)->paginate(5);
+        };
         return view('home', compact(['causes']));
     }
 
     /**
+     * Display a listing of the queued resources.
+     */
+    public function queue()
+    {
+        $causes = Cause::withSum('donations as collected', 'donation')->where('approved', '=', 0)->paginate(5);
+        return view('cause.queue', compact(['causes']));
+    }
+
+    /**
      * Show the form for creating a new resource.
+     * @disregard [cause() method exists, but not detected by intelephense]
      */
     public function create()
     {
@@ -87,7 +100,7 @@ class CauseController extends Controller
      */
     public function edit(Cause $cause)
     {
-        //
+        return view('cause.edit', $cause);
     }
 
     /**

@@ -6,7 +6,7 @@
                     <x-listing :id="$cause->id" :thumbnail="$cause->getThumbnail()" :title="$cause->title" :hashtags="$cause->getHashTags()" :description="$cause->description"
                         :goal="$cause->goal" :collected="$cause->collected" :editable="true" />
                 @empty
-                    <p>No data found</p>
+                    <p>No causes in queue</p>
                 @endforelse
             </div>
         </div>
