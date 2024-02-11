@@ -100,7 +100,7 @@ class CauseController extends Controller
      */
     public function edit(Cause $cause)
     {
-        return view('cause.edit', $cause);
+        return view('cause.edit', compact(['cause']));
     }
 
     /**

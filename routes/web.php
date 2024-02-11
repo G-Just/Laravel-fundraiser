@@ -36,6 +36,8 @@ Route::middleware('auth')->prefix('cause')->group(function () {
     Route::post('/store', [CauseController::class, 'store'])->name('cause.store');
     Route::post('/{cause}/donate', [CauseController::class, 'donate'])->name('cause.donate');
     Route::get('/{cause}/edit', [CauseController::class, 'edit'])->name('cause.edit');
+    Route::post('/{cause}/update', [CauseController::class, 'update'])->name('cause.update');
+    Route::post('/{cause}/destroy', [CauseController::class, 'destroy'])->name('cause.destroy');
 });
 
 Route::get('cause/{cause}/', [CauseController::class, 'show'])->name('cause.show');
