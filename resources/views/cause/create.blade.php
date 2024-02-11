@@ -25,7 +25,7 @@
                 <x-text-input id="hashtag" class="block w-full mt-1" type="text" autofocus
                     autocomplete="hashtag" />
                 <x-input-error :messages="$errors->get('hashtag')" class="mt-2" />
-                <div id="tag-container" class="flex flex-wrap gap-2 my-2">
+                <div id="tag-container" class="flex flex-wrap gap-2 my-2 text-white">
                 </div>
 
                 <script>

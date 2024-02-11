@@ -1,11 +1,15 @@
 <x-app-layout>
     <form action="{{ route('cause.update', $cause) }}" method="POST">
         @csrf
-        <div class="lg:w-[900px] flex flex-col gap-6 p-4 bg-gray-800 border border-gray-700 rounded-xl">
-            <h1 class="text-5xl text-left">{{ $cause->title }}</h1>
+        <div
+            class="w-screen lg:w-[900px] flex flex-col gap-6 p-4 dark:bg-gray-800 border dark:border-gray-700 rounded-xl">
+            <x-input-label for="title" :value="__('Title')" />
+            <x-text-input id="title" class="block w-full mt-1" type="text" name="title" :value="$cause->title" required
+                autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('title')" class="mt-2" />
             <div class="flex flex-col gap-4">
                 <img class="object-cover col-span-4 rounded-xl" src="{{ $cause->getThumbnail() }}" alt="Thumbnail">
-                <div class="flex gap-4">
+                <div class="flex gap-4 overflow-x-auto">
                     @foreach ($cause->getImages() as $key => $image)
                         <x-image-dialog :img="$image" :iter="$key" />
                     @endforeach
@@ -21,7 +25,7 @@
                     <x-text-input id="hashtag" class="block w-full mt-1" type="text" autofocus
                         autocomplete="hashtag" />
                     <x-input-error :messages="$errors->get('hashtag')" class="mt-2" />
-                    <div id="tag-container" class="flex flex-wrap gap-2 my-2">
+                    <div id="tag-container" class="flex flex-wrap gap-2 my-2 text-white">
                     </div>
                     <script>
                         let input, hashtagArray, container, t;
@@ -71,7 +75,7 @@
             <hr>
 
             {{-- Description --}}
-            <x-textarea-input :value="$cause->description" />
+            <x-textarea-input name="description" :value="$cause->description" />
             <hr>
 
             <!-- Goal -->
@@ -101,37 +105,6 @@
                 <x-primary-button id="open" class="ms-3 dark:bg-red-500 dark:text-white dark:hover:bg-red-600">
                     {{ __('Delete') }}
                 </x-primary-button>
-                <dialog id="modal" class="backdrop:bg-black backdrop:bg-opacity-80">
-                    <form action="cause.destroy" method="post">
-                        @csrf
-                        <div class="flex flex-col items-center justify-center gap-4 p-8 bg-slate-700">
-                            <p class="text-2xl text-white">Are you sure you want to delete this post?</p>
-                            <div class="flex">
-                                <x-primary-button class="ms-3">
-                                    {{ __('Delete') }}
-                                </x-primary-button>
-                                <x-primary-button id="close"
-                                    class="ms-3 dark:bg-red-500 dark:text-white dark:hover:bg-red-600">
-                                    {{ __('Cancel') }}
-                                </x-primary-button>
-                            </div>
-                        </div>
-                    </form>
-                </dialog>
-                <script>
-                    const open = document.getElementById("open")
-                    const close = document.getElementById("close")
-                    const modal = document.getElementById("modal")
-
-                    open.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        modal.showModal();
-                    })
-                    close.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        modal.close();
-                    })
-                </script>
 
                 {{-- Approve switch --}}
                 @if (auth()->user()->admin)
@@ -139,7 +112,7 @@
                         <p class="px-2"><span id='approved'>Not approved</span><span class="hidden"
                                 id='not_approved'>Approved</span></p>
                         <label class="relative inline-flex items-center cursor-pointer">
-                            <input
+                            <input name="approved"
                                 onclick="
                         const approved = document.getElementById('approved')
                         const not_approved = document.getElementById('not_approved')
@@ -165,4 +138,34 @@
         </div>
         </div>
     </form>
+    <dialog id="modal" class="backdrop:bg-black backdrop:bg-opacity-80">
+        <form action="{{ route('cause.destroy', $cause) }}" method="POST">
+            @csrf
+            <div class="flex flex-col items-center justify-center gap-4 p-8 bg-slate-700">
+                <p class="text-2xl text-white">Are you sure you want to delete this post?</p>
+                <div class="flex">
+                    <x-primary-button class="ms-3">
+                        {{ __('Delete') }}
+                    </x-primary-button>
+                    <x-primary-button id="close" class="ms-3 dark:bg-red-500 dark:text-white dark:hover:bg-red-600">
+                        {{ __('Cancel') }}
+                    </x-primary-button>
+                </div>
+            </div>
+        </form>
+    </dialog>
+    <script>
+        const open = document.getElementById("open")
+        const close = document.getElementById("close")
+        const modal = document.getElementById("modal")
+
+        open.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.showModal();
+        })
+        close.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.close();
+        })
+    </script>
 </x-app-layout>

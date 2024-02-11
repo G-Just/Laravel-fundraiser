@@ -16,10 +16,12 @@
     const close{{ $iter }} = document.getElementById("close{{ $iter }}")
     const modal{{ $iter }} = document.getElementById("modal{{ $iter }}")
 
-    open{{ $iter }}.addEventListener('click', () => {
+    open{{ $iter }}.addEventListener('click', (e) => {
+        e.preventDefault();
         modal{{ $iter }}.showModal();
     })
-    close{{ $iter }}.addEventListener('click', () => {
+    close{{ $iter }}.addEventListener('click', (e) => {
+        e.preventDefault();
         modal{{ $iter }}.close();
     })
 </script>

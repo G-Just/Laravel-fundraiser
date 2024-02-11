@@ -35,7 +35,7 @@
         </div>
         <p class="mt-3 overflow-y-auto h-28">{{ $description }}</p>
         @if ($goal > $collected)
-            <x-progress-bar :goal="$goal" :collected="$collected" />
+            <x-progress-bar :goal="$goal" :collected="$collected ?? 0" />
         @else
             <div class="flex">
                 <x-money :value="$goal" />

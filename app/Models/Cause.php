@@ -20,6 +20,7 @@ class Cause extends Model
         'hashtags',
         'user_id',
         'goal',
+        'approved',
     ];
 
     protected $attributes = [

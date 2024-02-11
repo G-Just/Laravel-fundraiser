@@ -1,12 +1,12 @@
 <x-app-layout>
-    <div class="lg:w-[900px] flex flex-col gap-6 p-4 bg-gray-800 border border-gray-700 rounded-xl">
+    <div class="w-screen lg:w-[900px] flex flex-col gap-6 p-4 dark:bg-gray-800 border dark:border-gray-700 rounded-xl">
         <div class="relative">
             <h1 class="text-5xl text-left">{{ $cause->title }}</h1>
             <x-donation-list class="-top-4 -right-[300px]" :donations="$cause->donations()->get()" />
         </div>
         <div class="flex flex-col gap-4">
             <img class="object-cover col-span-4 rounded-xl" src="{{ $cause->getThumbnail() }}" alt="Thumbnail">
-            <div class="flex gap-4">
+            <div class="flex gap-4 overflow-x-auto">
                 @foreach ($cause->getImages() as $key => $image)
                     <x-image-dialog :img="$image" :iter="$key" />
                 @endforeach

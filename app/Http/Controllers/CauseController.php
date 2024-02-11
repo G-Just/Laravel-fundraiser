@@ -10,6 +10,7 @@ use App\Models\Donation;
 use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class CauseController extends Controller
 {
@@ -19,10 +20,11 @@ class CauseController extends Controller
     public function index()
     {
         $causes = Cause::withSum('donations as collected', 'donation')->where('approved', '=', 1)->paginate(5);
-        if ($causes->count() == 0 and Auth::user()) {
-            $causes = Cause::withSum('donations as collected', 'donation')->where('user_id', '=', Auth::user()->id)->paginate(5);
-        };
-        return view('home', compact(['causes']));
+        $private = null;
+        if (Auth::check()) {
+            $private = Cause::withSum('donations as collected', 'donation')->where('user_id', '=', Auth::user()->id)->where('approved', '=', 0)->first();
+        }
+        return view('home', compact(['causes', 'private']));
     }
 
     /**
@@ -100,6 +102,9 @@ class CauseController extends Controller
      */
     public function edit(Cause $cause)
     {
+        if ($cause->approved) {
+            return redirect()->route('cause.show', compact(['cause']))->with('error', 'Cannot edit the post after it has been approved');
+        };
         return view('cause.edit', compact(['cause']));
     }
 
@@ -108,7 +113,28 @@ class CauseController extends Controller
      */
     public function update(UpdateCauseRequest $request, Cause $cause)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:30',
+            'description' => 'nullable|string',
+            'goal' => 'numeric',
+        ]);
+
+        if (isset($request->hashtags)) {
+            foreach ($request->hashtags as $hashtag) {
+                if (strlen($hashtag) > 0) {
+                    $hashtag = Hashtag::updateOrCreate(['hashtag' => $hashtag]);
+                    $cause->hashtags()->syncWithoutDetaching($hashtag);
+                }
+            }
+        }
+
+        if ($request->approved) {
+            $validated['approved'] = true;
+        };
+
+        $cause->update($validated);
+
+        return redirect()->route('cause.show', $cause)->with('message', 'Cause updated successfully');
     }
 
     /**
@@ -116,7 +142,8 @@ class CauseController extends Controller
      */
     public function destroy(Cause $cause)
     {
-        //
+        $cause->delete();
+        return redirect()->route('home')->with('message', 'Cause deleted successfully');
     }
 
     /**
