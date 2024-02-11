@@ -11,8 +11,6 @@ use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use function PHPUnit\Framework\isNull;
-
 class CauseController extends Controller
 {
     /**
@@ -29,6 +27,9 @@ class CauseController extends Controller
      */
     public function create()
     {
+        if (Auth::user()->cause()->count() === 1) {
+            return redirect()->route('home')->with('error', 'Users can only create one cause');
+        };
         return view('cause.create');
     }
 
@@ -45,7 +46,7 @@ class CauseController extends Controller
             'image' => 'image',
         ]);
 
-        $validated['owner'] = Auth::user()->id;
+        $validated['user_id'] = Auth::user()->id;
 
         if ($request->has('thumbnail')) {
             $imagePath = request('thumbnail')->store('cause', 'public');
@@ -111,9 +112,6 @@ class CauseController extends Controller
     public function donate(Request $request, Cause $cause)
     {
         $cause = Cause::where('id', '=', $cause->id)->withSum('donations as collected', 'donation')->first();
-        if ($cause->goal - $cause->collected <= $request['donation']) {
-            return redirect()->route('cause.show', $cause)->with('message', 'Donation successful');
-        }
         $validated = $request->validate([
             'donation' => 'numeric'
         ]);

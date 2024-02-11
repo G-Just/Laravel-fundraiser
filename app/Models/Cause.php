@@ -18,7 +18,7 @@ class Cause extends Model
         'description',
         'thumbnail',
         'hashtags',
-        'owner',
+        'user_id',
         'goal',
     ];
 
@@ -28,7 +28,7 @@ class Cause extends Model
 
     public function owner(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'owner');
+        return $this->belongsTo(User::class);
     }
 
     public function donations(): HasMany

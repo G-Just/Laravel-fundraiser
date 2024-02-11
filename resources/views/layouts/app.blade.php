@@ -34,6 +34,12 @@
         </main>
         <x-footer />
     </div>
+    @if (session()->has('message'))
+        <x-message :message="session()->get('message')" :success="true" />
+    @endif
+    @if (session()->has('error'))
+        <x-message :message="session()->get('error')" :success="false" />
+    @endif
 </body>
 
 </html>

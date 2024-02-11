@@ -25,34 +25,41 @@
         <hr>
         <p>{{ $cause->description }}</p>
         <hr>
-        <div class="flex flex-col items-center w-full gap-4">
-            <x-progress-bar :goal="$cause->goal" :collected="$cause->collected" />
-            <div class="flex">
-                <p>Only&nbsp;</p>
-                <x-money class="text-center" :value="$cause->goal - $cause->collected" />
-                <p>&nbsp;USD left to reach the goal!</p>
-            </div>
-            <div class="flex mt-2">
-                <form action="{{ route('cause.donate', $cause) }}" method="post">
-                    @csrf
-                    <x-text-input step="0.1" type="number" name="donation" oninput="show(event)" id='donation'
-                        placeholder="Donation amount" />
-                    <x-primary-button>Donate</x-primary-button>
-                </form>
-            </div>
-            <div class="my-2">
-                <p class="text-center" id="display"></p>
-            </div>
-            <script>
-                const display = document.getElementById('display')
+        @if ($cause->goal > $cause->collected)
+            <div class="flex flex-col items-center w-full gap-4">
+                <x-progress-bar :goal="$cause->goal" :collected="$cause->collected" />
+                <div class="flex">
+                    <p>Only&nbsp;</p>
+                    <x-money class="text-center" :value="$cause->goal - $cause->collected" />
+                    <p>&nbsp;USD left to reach the goal!</p>
+                </div>
+                <div class="flex mt-2">
+                    <form action="{{ route('cause.donate', $cause) }}" method="post">
+                        @csrf
+                        <x-text-input step="0.1" type="number" name="donation" oninput="show(event)" id='donation'
+                            placeholder="Donation amount" />
+                        <x-primary-button>Donate</x-primary-button>
+                    </form>
+                </div>
+                <div class="my-2">
+                    <p class="text-center" id="display"></p>
+                </div>
+                <script>
+                    const display = document.getElementById('display')
 
-                function show(event) {
-                    display.innerHTML = 'Donation: $' + (+event.target.value).toLocaleString('en-US', {
-                        minimumFractionDigits: 2
-                    }) + ' USD';
-                }
-            </script>
-        </div>
+                    function show(event) {
+                        display.innerHTML = 'Donation: $' + (+event.target.value).toLocaleString('en-US', {
+                            minimumFractionDigits: 2
+                        }) + ' USD';
+                    }
+                </script>
+            </div>
+        @else
+            <div class="flex justify-center">
+                <x-money :value="$cause->goal" />
+                <p>&nbsp;Collected!</p>
+            </div>
+        @endif
     </div>
 
 </x-app-layout>

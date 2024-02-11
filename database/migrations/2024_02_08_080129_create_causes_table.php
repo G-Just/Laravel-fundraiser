@@ -17,8 +17,8 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->string('thumbnail')->nullable();
             $table->decimal('goal', $total = 15, $places = 2);
-            $table->unsignedBigInteger('owner')->nullable();
-            $table->foreign('owner')->references('id')->on('users')->nullOnDelete();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
             $table->boolean('approved');
             $table->timestamps();
         });
