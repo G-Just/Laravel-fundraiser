@@ -8,8 +8,9 @@
                     <hr>
                 @endif
                 @forelse ($causes as $cause)
-                    <x-listing :id="$cause->id" :thumbnail="$cause->getThumbnail()" :title="$cause->title" :hashtags="$cause->getHashTags()"
-                        :description="$cause->description" :goal="$cause->goal" :collected="$cause->collected ?? 0" />
+                    <x-listing :page="$causes->currentPage()" :likes="$cause->likes->count()" :id="$cause->id" :thumbnail="$cause->getThumbnail()"
+                        :title="$cause->title" :hashtags="$cause->getHashTags()" :description="$cause->description" :goal="$cause->goal"
+                        :collected="$cause->collected ?? 0" />
                 @empty
                     <p class="text-center">No data found</p>
                 @endforelse

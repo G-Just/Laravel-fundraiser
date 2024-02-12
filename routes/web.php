@@ -38,6 +38,8 @@ Route::middleware('auth')->prefix('cause')->group(function () {
     Route::get('/{cause}/edit', [CauseController::class, 'edit'])->name('cause.edit');
     Route::post('/{cause}/update', [CauseController::class, 'update'])->name('cause.update');
     Route::post('/{cause}/destroy', [CauseController::class, 'destroy'])->name('cause.destroy');
+    Route::post('/{cause}/like', [CauseController::class, 'like'])->name('cause.like');
+    Route::post('/{cause}/dislike', [CauseController::class, 'dislike'])->name('cause.dislike');
 });
 
 Route::get('cause/{cause}/', [CauseController::class, 'show'])->name('cause.show');

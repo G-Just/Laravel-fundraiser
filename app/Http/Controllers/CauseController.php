@@ -10,7 +10,7 @@ use App\Models\Donation;
 use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class CauseController extends Controller
 {
@@ -24,6 +24,7 @@ class CauseController extends Controller
         if (Auth::check()) {
             $private = Cause::withSum('donations as collected', 'donation')->where('user_id', '=', Auth::user()->id)->where('approved', '=', 0)->first();
         }
+
         return view('home', compact(['causes', 'private']));
     }
 
@@ -66,7 +67,7 @@ class CauseController extends Controller
 
         if ($request->has('thumbnail')) {
             $imagePath = request('thumbnail')->store('cause', 'public');
-            $validated['thumbnail'] = $imagePath;
+            $validated['thumbnail'] = url('storage/' . $imagePath);
         }
 
         $cause = Cause::create($validated);
@@ -121,6 +122,8 @@ class CauseController extends Controller
             'goal' => 'numeric',
         ]);
 
+        DB::table('cause_hashtag')->whereIn('cause_id', [$cause->id])->delete();
+
         if (isset($request->hashtags)) {
             foreach ($request->hashtags as $hashtag) {
                 if (strlen($hashtag) > 0) {
@@ -136,7 +139,7 @@ class CauseController extends Controller
 
         $cause->update($validated);
 
-        return redirect()->route('cause.show', $cause)->with('message', 'Cause updated successfully');
+        return redirect()->route('cause.edit', $cause)->with('message', 'Cause updated successfully');
     }
 
     /**
@@ -149,17 +152,37 @@ class CauseController extends Controller
     }
 
     /**
-     * Store a newly donation resource in storage.
+     * Store a new donation resource in storage.
      */
     public function donate(Request $request, Cause $cause)
     {
         $cause = Cause::where('id', '=', $cause->id)->withSum('donations as collected', 'donation')->first();
         $validated = $request->validate([
-            'donation' => 'numeric'
+            'donation' => 'numeric|min:0.01'
         ]);
         $validated['cause_id'] = $cause->id;
         $validated['user_id'] = Auth::user()->id;
         Donation::create($validated);
         return redirect()->route('cause.show', $cause)->with('message', 'Donation successful');
+    }
+
+    /**
+     * Store a like resource in storage.
+     * @disregard [likes() method exists, but not detected by intelephense]
+     */
+    public function like(Cause $cause, Request $request)
+    {
+        auth()->user()->likes()->attach($cause);
+        return redirect()->route('home', ['page' => $request->page]);
+    }
+
+    /**
+     * Destroy a like resource in storage.
+     * @disregard [likes() method exists, but not detected by intelephense]
+     */
+    public function dislike(Cause $cause, Request $request)
+    {
+        auth()->user()->likes()->detach($cause);
+        return redirect()->route('home', ['page' => $request->page]);
     }
 }

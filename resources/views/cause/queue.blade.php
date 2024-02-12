@@ -3,8 +3,8 @@
         <div class="overflow-hidden shadow-sm sm:rounded-lg">
             <div class="flex flex-col gap-8 text-gray-900 dark:text-gray-100">
                 @forelse ($causes as $cause)
-                    <x-listing :id="$cause->id" :thumbnail="$cause->getThumbnail()" :title="$cause->title" :hashtags="$cause->getHashTags()" :description="$cause->description"
-                        :goal="$cause->goal" :collected="$cause->collected" :editable="true" />
+                    <x-listing :page="$causes->currentPage()" :id="$cause->id" :thumbnail="$cause->getThumbnail()" :title="$cause->title" :hashtags="$cause->getHashTags()"
+                        :description="$cause->description" :goal="$cause->goal" :collected="$cause->collected ?? 0" :editable="true" />
                 @empty
                     <p>No causes in queue</p>
                 @endforelse

@@ -33,11 +33,16 @@
                     <x-money class="text-center" :value="$cause->goal - $cause->collected" />
                     <p>&nbsp;USD left to reach the goal!</p>
                 </div>
-                <div class="flex mt-2">
-                    <form action="{{ route('cause.donate', $cause) }}" method="post">
+                <div class="mt-2">
+                    <x-input-label class="text-center" for="donate" :value="__('Donate')" />
+                    <hr class="my-2">
+                    <form class="flex gap-2" action="{{ route('cause.donate', $cause) }}" method="post">
                         @csrf
-                        <x-text-input step="0.1" type="number" name="donation" oninput="show(event)" id='donation'
-                            placeholder="Donation amount" />
+                        <div class="relative">
+                            <x-text-input id="donate" step="0.1" type="number" name="donation"
+                                oninput="show(event)" id='donation' placeholder="Donation amount" />
+                            <x-input-error :messages="$errors->get('donation')" />
+                        </div>
                         <x-primary-button>Donate</x-primary-button>
                     </form>
                 </div>

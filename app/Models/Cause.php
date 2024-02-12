@@ -47,15 +47,20 @@ class Cause extends Model
         return $this->hasMany(Image::class);
     }
 
+    public function likes(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'cause_like')->withTimestamps();
+    }
+
     /**
      * Returns a link that points to the thumbnail.
      */
     public function getThumbNail()
     {
         if ($this->thumbnail) {
-            return url('storage/' . $this->thumbnail);
+            return $this->thumbnail;
         } else {
-            return "https://www.pixel4k.com/wp-content/uploads/2024/01/sunset-lands-art-4k_1706235364.jpg.webp";
+            return "https://picsum.photos/1000/500";
         }
     }
 
@@ -78,7 +83,7 @@ class Cause extends Model
     public function getImages(): SupportCollection
     {
         return $this->images()->get()->map(function (object $item) {
-            return $item->image = url('storage/' . $item->image);
+            return $item->image = $item->image;
         });
     }
 }
