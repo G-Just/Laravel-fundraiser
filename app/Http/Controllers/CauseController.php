@@ -19,10 +19,17 @@ class CauseController extends Controller
      */
     public function index()
     {
-        $causes = Cause::withSum('donations as collected', 'donation')->where('approved', '=', 1)->paginate(5);
+        $causes = Cause::withSum('donations as collected', 'donation')->where('approved', '=', 1)->orderByRaw('(collected * 100 / goal) DESC')->paginate(5);
         $private = null;
         if (Auth::check()) {
             $private = Cause::withSum('donations as collected', 'donation')->where('user_id', '=', Auth::user()->id)->where('approved', '=', 0)->first();
+        }
+
+        foreach ($causes as $key => $cause) {
+            if ($cause->collected >= $cause->goal) {
+                $last = $causes->pull($key);
+                $causes->push($last);
+            }
         }
 
         return view('home', compact(['causes', 'private']));

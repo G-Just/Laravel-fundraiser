@@ -60,7 +60,7 @@ class Cause extends Model
         if ($this->thumbnail) {
             return $this->thumbnail;
         } else {
-            return "https://picsum.photos/1000/500";
+            return "https://picsum.photos/seed/picsum/1000/500";
         }
     }
 
