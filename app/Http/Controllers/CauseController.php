@@ -45,7 +45,8 @@ class CauseController extends Controller
         if (Auth::user()->cause()->count() === 1) {
             return redirect()->route('home')->with('error', 'Users can only create one cause');
         };
-        return view('cause.create');
+        $hashtags = Hashtag::all();
+        return view('cause.create', compact(['hashtags']));
     }
 
     /**
@@ -105,7 +106,8 @@ class CauseController extends Controller
         if ($cause->approved) {
             return redirect()->route('cause.show', compact(['cause']))->with('error', 'Cannot edit the post after it has been approved');
         };
-        return view('cause.edit', compact(['cause']));
+        $hashtags = Hashtag::all();
+        return view('cause.edit', compact(['cause', 'hashtags']));
     }
 
     /**

@@ -15,7 +15,7 @@
     class="relative flex flex-col bg-white rounded-lg lg:max-h-64 lg:flex-row dark:bg-gray-800 min-w-[300px]">
     @if ($editable)
         <div
-            class="absolute left-0 right-0 flex flex-col items-center justify-center -translate-y-1/2 bg-black bg-opacity-50 top-1/2">
+            class="absolute left-0 right-0 flex flex-col items-center justify-center -translate-y-1/2 bg-black bg-opacity-50 top-20 lg:top-1/2">
             <p>This cause is not yet approved</p>
             <p>Click to edit</p>
         </div>

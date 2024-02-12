@@ -27,7 +27,6 @@
                 <x-input-error :messages="$errors->get('hashtag')" class="mt-2" />
                 <div id="tag-container" class="flex flex-wrap gap-2 my-2 text-white">
                 </div>
-
                 <script>
                     let input, hashtagArray, container, t;
                     let iter = 0;
@@ -62,7 +61,22 @@
                         }
                     });
                 </script>
-
+                <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+                <link rel="stylesheet" href="/resources/demos/style.css">
+                <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+                <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+                <script>
+                    $(function() {
+                        var availableTags = [
+                            @foreach ($hashtags as $hashtag)
+                                "{{ $hashtag->hashtag }}",
+                            @endforeach
+                        ];
+                        $("#hashtag").autocomplete({
+                            source: availableTags
+                        });
+                    });
+                </script>
                 <!-- Goal -->
                 <div class="mt-4">
                     <x-input-label for="goal" :value="__('Goal')" />

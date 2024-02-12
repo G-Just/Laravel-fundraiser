@@ -11,7 +11,7 @@
                     <x-listing :id="$cause->id" :thumbnail="$cause->getThumbnail()" :title="$cause->title" :hashtags="$cause->getHashTags()"
                         :description="$cause->description" :goal="$cause->goal" :collected="$cause->collected ?? 0" />
                 @empty
-                    <p>No data found</p>
+                    <p class="text-center">No data found</p>
                 @endforelse
             </div>
         </div>
