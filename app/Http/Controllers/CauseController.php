@@ -11,6 +11,7 @@ use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class CauseController extends Controller
 {
@@ -90,7 +91,7 @@ class CauseController extends Controller
         if (isset($request->images)) {
             foreach ($request->images as $image) {
                 $imagePath = $image->store('cause', 'public');
-                Image::updateOrCreate(['image' => $imagePath, 'cause_id' => $cause->id]);
+                Image::updateOrCreate(['image' => url('storage/' . $imagePath), 'cause_id' => $cause->id]);
             }
         }
 
@@ -127,6 +128,7 @@ class CauseController extends Controller
             'title' => 'required|string|max:30',
             'description' => 'nullable|string',
             'goal' => 'numeric',
+            'thumbnail' => 'image'
         ]);
 
         DB::table('cause_hashtag')->whereIn('cause_id', [$cause->id])->delete();
@@ -143,6 +145,20 @@ class CauseController extends Controller
         if ($request->approved) {
             $validated['approved'] = true;
         };
+
+        if ($request->has('thumbnail')) {
+            $imagePath = request('thumbnail')->store('cause', 'public');
+            $validated['thumbnail'] = url('storage/' . $imagePath);
+            Storage::disk('public')->delete($cause->thumbnail);
+        }
+
+        if (isset($request->files)) {
+            foreach ($request->files->all() as $key => $image) {
+                $imagePath = request($key)->store('cause', 'public');
+                $cause->images()->get()[$key[-1]]->delete();
+                Image::updateOrCreate(['image' => url('storage/' . $imagePath), 'cause_id' => $cause->id]);
+            }
+        }
 
         $cause->update($validated);
 

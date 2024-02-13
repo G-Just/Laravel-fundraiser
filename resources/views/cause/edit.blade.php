@@ -1,5 +1,5 @@
 <x-app-layout>
-    <form action="{{ route('cause.update', $cause) }}" method="POST">
+    <form enctype="multipart/form-data" action="{{ route('cause.update', $cause) }}" method="POST">
         @csrf
         <div
             class="w-screen lg:w-[900px] flex flex-col gap-6 p-4 dark:bg-gray-800 border dark:border-gray-700 rounded-xl">
@@ -8,10 +8,53 @@
                 autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('title')" class="mt-2" />
             <div class="flex flex-col gap-4">
-                <img class="object-cover col-span-4 rounded-xl" src="{{ $cause->getThumbnail() }}" alt="Thumbnail">
+                <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'edit-thumbnail')"><img
+                        class="object-cover col-span-4 cursor-pointer rounded-xl" src="{{ $cause->getThumbnail() }}"
+                        alt="Thumbnail"></button>
+                <x-modal name="edit-thumbnail">
+                    <form enctype="multipart/form-data" action="{{ route('cause.update', $cause) }}" method="POST">
+                        @csrf
+                        <div class="flex flex-col p-4">
+                            <img class="object-cover col-span-4 cursor-pointer rounded-xl"
+                                src="{{ $cause->getThumbnail() }}" alt="Thumbnail">
+                            <div class="my-4">
+                                <x-input-label for="thumbnail" :value="__('Thumbnail')" />
+                                <x-text-input id="thumbnail" class="block w-full mt-1" type="file" name="thumbnail"
+                                    autofocus />
+                                <x-input-error :messages="$errors->get('thumbnail')" class="mt-2" />
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <x-primary-button>
+                                    {{ __('Change') }}
+                                </x-primary-button>
+                            </div>
+                        </div>
+                    </form>
+                </x-modal>
+
                 <div class="flex gap-4 overflow-x-auto">
                     @foreach ($cause->getImages() as $key => $image)
-                        <x-image-dialog :img="$image" :iter="$key" />
+                        <button x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', 'edit-image{{ $key }}')"><img
+                                class="object-cover w-20 h-20 col-span-4 cursor-pointer" src="{{ $image }}"
+                                alt="Image"></button>
+                        <x-modal name="edit-image{{ $key }}">
+                            <div class="flex flex-col p-4">
+                                <img class="object-cover col-span-4 cursor-pointer rounded-xl" src="{{ $image }}"
+                                    alt="Image">
+                                <div class="my-4">
+                                    <x-input-label for="image{{ $key }}" :value="__('Image')" />
+                                    <x-text-input id="image{{ $key }}" class="block w-full mt-1"
+                                        type="file" name="image{{ $key }}" autofocus />
+                                    <x-input-error :messages="$errors->get('image')" class="mt-2" />
+                                </div>
+                                <div class="flex justify-end gap-2">
+                                    <x-primary-button>
+                                        {{ __('Change') }}
+                                    </x-primary-button>
+                                </div>
+                            </div>
+                        </x-modal>
                     @endforeach
                 </div>
             </div>
@@ -118,9 +161,9 @@
 
             {{-- Update or delete buttons --}}
             <div class="flex justify-between">
-                <x-primary-button id="open" class="ms-3 dark:bg-red-500 dark:text-white dark:hover:bg-red-600">
+                <x-danger-button id="open" class="ms-3">
                     {{ __('Delete') }}
-                </x-primary-button>
+                </x-danger-button>
 
                 {{-- Approve switch --}}
                 @if (auth()->user()->admin)
@@ -163,9 +206,9 @@
                     <x-primary-button class="ms-3">
                         {{ __('Delete') }}
                     </x-primary-button>
-                    <x-primary-button id="close" class="ms-3 dark:bg-red-500 dark:text-white dark:hover:bg-red-600">
+                    <x-danger-button id="close" class="ms-3">
                         {{ __('Cancel') }}
-                    </x-primary-button>
+                    </x-danger-button>
                 </div>
             </div>
         </form>
