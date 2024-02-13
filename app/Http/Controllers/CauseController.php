@@ -163,7 +163,7 @@ class CauseController extends Controller
         if ($request->has('thumbnail')) {
             $imagePath = request('thumbnail')->store('cause', 'public');
             $validated['thumbnail'] = url('storage/' . $imagePath);
-            Storage::disk('public')->delete($cause->thumbnail);
+            Storage::disk('public')->delete($cause->getThumbnail());
         }
 
         if (count($request->files)) {
