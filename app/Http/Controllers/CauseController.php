@@ -126,7 +126,7 @@ class CauseController extends Controller
     public function edit(Cause $cause)
     {
         if ($cause->approved) {
-            return redirect()->route('cause.show', compact(['cause']))->with('error', 'Cannot edit the post after it has been approved');
+            return redirect()->route('cause.edit', compact(['cause']))->with('error', 'Cannot edit the post after it has been approved');
         };
         $hashtags = Hashtag::all();
         return view('cause.edit', compact(['cause', 'hashtags']));
@@ -137,6 +137,7 @@ class CauseController extends Controller
      */
     public function update(UpdateCauseRequest $request, Cause $cause)
     {
+        // dd($request);
         $validated = $request->validate([
             'title' => 'required|string|max:30',
             'description' => 'nullable|string',
@@ -165,17 +166,28 @@ class CauseController extends Controller
             Storage::disk('public')->delete($cause->thumbnail);
         }
 
+        if ($request->remove) {
+            $cause->images()->get()[$request->remove[-1]]->delete();
+        }
+
         if (isset($request->files)) {
             foreach ($request->files->all() as $key => $image) {
-                $imagePath = request($key)->store('cause', 'public');
-                $cause->images()->get()[$key[-1]]->delete();
-                Image::updateOrCreate(['image' => url('storage/' . $imagePath), 'cause_id' => $cause->id]);
+                if ($key !== 'thumbnail') {
+                    $imagePath = request($key)->store('cause', 'public');
+                    if (count($cause->images()->get()) > $key[-1]) {
+                        $cause->images()->get()[$key[-1]]->delete();
+                    }
+                    Image::updateOrCreate(['image' => url('storage/' . $imagePath), 'cause_id' => $cause->id]);
+                }
             }
         }
 
         $cause->update($validated);
-
-        return redirect()->route('cause.edit', $cause)->with('message', 'Cause updated successfully');
+        if ($request->approved) {
+            return redirect()->route('cause.show', $cause)->with('message', 'Cause updated and approved successfully');
+        } else {
+            return redirect()->route('cause.edit', $cause)->with('message', 'Cause updated successfully');
+        }
     }
 
     /**

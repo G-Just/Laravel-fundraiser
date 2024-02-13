@@ -33,6 +33,41 @@
                 </x-modal>
 
                 <div class="flex gap-4 overflow-x-auto">
+                    <button x-data=""
+                        x-on:click.prevent="$dispatch('open-modal', 'edit-image{{ count($cause->getImages()) }}')"><svg
+                            class="w-20 h-20" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"
+                            fill="#ffffff" stroke="#ffffff" stroke-width="6.656000000000001">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path style="fill:#ffffff;"
+                                    d="M512,0h-40v16h24v32h16V0z M432,0h-40v16h40V0z M352,0h-40v16h40V0z M272,0h-40v16h40V0z M192,0h-40 v16h40V0z M112,0H72v16h40V0z M32,0H0v16h32V0z M16,48H0v40h16V48z M16,128H0v40h16V128z M16,208H0v40h16V208z M16,288H0v40h16V288z M16,368H0v40h16V368z M16,448H0v40h16V448z M56,496H16v16h40V496z M136,496H96v16h40V496z M216,496h-40v16h40V496z M296,496h-40v16 h40V496z M376,496h-40v16h40V496z M456,496h-40v16h40V496z M512,488h-16v8l0,0v16h16V488z M512,408h-16v40h16V408z M512,328h-16v40 h16V328z M512,248h-16v40h16V248z M512,168h-16v40h16V168z M512,88h-16v40h16V88z">
+                                </path>
+                                <g>
+                                    <rect x="244" y="175.976" style="fill:#ffffff;" width="24" height="160.08">
+                                    </rect>
+                                    <rect x="175.976" y="244" style="fill:#ffffff;" width="160.08" height="24">
+                                    </rect>
+                                </g>
+                            </g>
+                        </svg>
+                    </button>
+                    <x-modal name="edit-image{{ count($cause->getImages()) }}">
+                        <div class="flex flex-col p-4">
+                            <div class="my-4">
+                                <x-input-label for="image{{ count($cause->getImages()) }}" :value="__('Image')" />
+                                <x-text-input id="image{{ count($cause->getImages()) }}" class="block w-full mt-1"
+                                    type="file" name="image{{ count($cause->getImages()) }}" autofocus />
+                                <x-input-error :messages="$errors->get('image')" class="mt-2" />
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <x-primary-button>
+                                    {{ __('Add') }}
+                                </x-primary-button>
+                            </div>
+                        </div>
+                    </x-modal>
                     @foreach ($cause->getImages() as $key => $image)
                         <button x-data=""
                             x-on:click.prevent="$dispatch('open-modal', 'edit-image{{ $key }}')"><img
@@ -40,8 +75,8 @@
                                 alt="Image"></button>
                         <x-modal name="edit-image{{ $key }}">
                             <div class="flex flex-col p-4">
-                                <img class="object-cover col-span-4 cursor-pointer rounded-xl" src="{{ $image }}"
-                                    alt="Image">
+                                <img class="object-cover col-span-4 cursor-pointer rounded-xl"
+                                    src="{{ $image }}" alt="Image">
                                 <div class="my-4">
                                     <x-input-label for="image{{ $key }}" :value="__('Image')" />
                                     <x-text-input id="image{{ $key }}" class="block w-full mt-1"
@@ -49,6 +84,9 @@
                                     <x-input-error :messages="$errors->get('image')" class="mt-2" />
                                 </div>
                                 <div class="flex justify-end gap-2">
+                                    <x-danger-button name="remove" value="{{ $key }}">
+                                        {{ __('Remove') }}
+                                    </x-danger-button>
                                     <x-primary-button>
                                         {{ __('Change') }}
                                     </x-primary-button>
@@ -140,8 +178,8 @@
             <!-- Goal -->
             <div class="mt-4">
                 <x-input-label for="goal" :value="__('Goal')" />
-                <x-text-input :value="$cause->goal" step="0.1" id="goal" class="block w-full mt-1" type="number"
-                    name="goal" autofocus autocomplete="goal" oninput="displayGoal(event)" />
+                <x-text-input :value="$cause->goal" step="0.1" id="goal" class="block w-full mt-1"
+                    type="number" name="goal" autofocus autocomplete="goal" oninput="displayGoal(event)" />
                 <x-input-error :messages="$errors->get('goal')" class="mt-2" />
                 <div class="my-2">
                     <p id="goal-show"></p>
