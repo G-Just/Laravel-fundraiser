@@ -166,9 +166,8 @@ class CauseController extends Controller
             Storage::disk('public')->delete($cause->thumbnail);
         }
 
-
-        if (isset($request->files)) {
-            if ($request->remove) {
+        if (count($request->files)) {
+            if (isset($request->remove)) {
                 $cause->images()->get()[$request->remove]->delete();
             } else {
                 foreach ($request->files->all() as $key => $image) {
@@ -181,14 +180,8 @@ class CauseController extends Controller
                     }
                 }
             }
-        } elseif ($request->remove) {
-            foreach ($request->files->all() as $key => $image) {
-                if ($key !== 'thumbnail') {
-                    if (count($cause->images()->get()) > $key[-1]) {
-                        $cause->images()->get()[$key[-1]]->delete();
-                    }
-                }
-            }
+        } elseif (isset($request->remove)) {
+            $cause->images()->get()[$request->remove]->delete();
         }
 
         $cause->update($validated);
