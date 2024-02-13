@@ -137,12 +137,12 @@ class CauseController extends Controller
      */
     public function update(UpdateCauseRequest $request, Cause $cause)
     {
-        // dd($request);
         $validated = $request->validate([
             'title' => 'required|string|max:30',
             'description' => 'nullable|string',
             'goal' => 'numeric',
-            'thumbnail' => 'image'
+            'thumbnail' => 'image',
+            'image' => 'image'
         ]);
 
         DB::table('cause_hashtag')->whereIn('cause_id', [$cause->id])->delete();
@@ -166,18 +166,27 @@ class CauseController extends Controller
             Storage::disk('public')->delete($cause->thumbnail);
         }
 
-        if ($request->remove) {
-            $cause->images()->get()[$request->remove[-1]]->delete();
-        }
 
         if (isset($request->files)) {
+            if ($request->remove) {
+                $cause->images()->get()[$request->remove]->delete();
+            } else {
+                foreach ($request->files->all() as $key => $image) {
+                    if ($key !== 'thumbnail') {
+                        $imagePath = request($key)->store('cause', 'public');
+                        if (count($cause->images()->get()) > $key[-1]) {
+                            $cause->images()->get()[$key[-1]]->delete();
+                        }
+                        Image::updateOrCreate(['image' => url('storage/' . $imagePath), 'cause_id' => $cause->id]);
+                    }
+                }
+            }
+        } elseif ($request->remove) {
             foreach ($request->files->all() as $key => $image) {
                 if ($key !== 'thumbnail') {
-                    $imagePath = request($key)->store('cause', 'public');
                     if (count($cause->images()->get()) > $key[-1]) {
                         $cause->images()->get()[$key[-1]]->delete();
                     }
-                    Image::updateOrCreate(['image' => url('storage/' . $imagePath), 'cause_id' => $cause->id]);
                 }
             }
         }
