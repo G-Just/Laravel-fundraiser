@@ -8,7 +8,8 @@
     </div>
 </button>
 <dialog id="modal{{ $iter }}" class="backdrop:bg-black backdrop:bg-opacity-80">
-    <button id="close{{ $iter }}" class="absolute text-4xl text-white top-4 right-4">X</button>
+    <button id="close{{ $iter }}"
+        class="absolute text-4xl text-white mix-blend-difference top-4 right-4">X</button>
     <img alt="Image" class="w-full h-full" src="{{ $img }}" />
 </dialog>
 <script>
