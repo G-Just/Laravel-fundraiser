@@ -18,9 +18,22 @@ class CauseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $causes = Cause::withSum('donations as collected', 'donation')->where('approved', '=', 1)->orderByRaw('(collected * 100 / goal) DESC')->paginate(5);
+        $sort = $request->query('sort');
+        $filter = $request->query('filter');
+        $causes = Cause::withSum('donations as collected', 'donation')->withCount('likes');
+        if ($sort) {
+            $causes = $causes->orderBy('likes_count', $sort);
+        } else {
+            $causes = $causes->orderByRaw('(collected * 100 / goal) DESC');
+        }
+        if ($filter) {
+            $causes = $causes->whereHas('hashtags', function ($query) use ($filter) {
+                return $query->where('hashtag', '=', $filter);
+            });
+        }
+        $causes = $causes->where('approved', '=', 1)->paginate(5)->withQueryString();
         $private = null;
         if (Auth::check()) {
             $private = Cause::withSum('donations as collected', 'donation')->where('user_id', '=', Auth::user()->id)->where('approved', '=', 0)->first();

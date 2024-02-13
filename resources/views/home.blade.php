@@ -1,7 +1,8 @@
 <x-app-layout>
-    <div class="px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="overflow-hidden shadow-sm sm:rounded-lg">
             <div class="flex flex-col gap-8 text-gray-900 dark:text-gray-100">
+                <x-filter-menu />
                 @if ($private)
                     <x-listing :id="$private->id" :thumbnail="$private->getThumbnail()" :title="$private->title" :hashtags="$private->getHashTags()" :description="$private->description"
                         :goal="$private->goal" :collected="$private->collected" :editable="true" />

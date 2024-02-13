@@ -39,7 +39,8 @@ class DatabaseSeeder extends Seeder
                 'thumbnail' => $faker->imageUrl(1000, 500, $faker->word()),
                 'goal' => rand(1, 250000),
                 'user_id' => rand(1, $users),
-                'approved' => $faker->boolean(60)
+                'approved' => $faker->boolean(60),
+                'created_at' => $faker->dateTime()
             ]);
         };
 
